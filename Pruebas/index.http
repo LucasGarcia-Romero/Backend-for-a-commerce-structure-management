@@ -1,0 +1,249 @@
+//Fichero donde se van a teestear todas las posibles acciones que se van a realizar sobre el modelo: get, post, put, delete y patch
+
+
+//USUARIOS
+
+
+//como los usuarios (en especial admins son necesarios para la creacción de comercios primero voy a crearlos)
+//creo un usuario
+//Registro de un usuario (Devuelve un JWT), esto pasara tanto en el register como en el login
+//ya que personalmente considero mejor para el usuario que una vez creada la cuenta haga el login automaticamente
+###
+POST http://localhost:3000/api/usuario/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "nombreUsuario": "User1",
+  "email": "Usuario1@gmail.com",
+  "contrasenia": "miContrasenia",
+  "edad": 21,
+  "ciudad": "Madrid",
+  "intereses": ["Canicas","Videojuegos"],
+  "permiteRecibirOfertas": true,
+  "rol":"user"
+}
+//creo un segundo usuario
+###
+POST http://localhost:3000/api/usuario/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "nombreUsuario": "User2",
+  "email": "Usuario2@gmail.com",
+  "contrasenia": "miContrasenia",
+  "edad": 10,
+  "ciudad": "Lisboa",
+  "intereses": ["Canicas","Videojuegos","Boxeo"],
+  "permiteRecibirOfertas": false,
+  "rol":"user"
+}
+//creo un admin
+###
+POST http://localhost:3000/api/usuario/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "nombreUsuario": "Admin1",
+  "email": "Admin1@gmail.com",
+  "contrasenia": "miContrasenia",
+  "edad": 14,
+  "ciudad": "Madrid",
+  "intereses": ["Futbol","Videojuegos","Boxeo"],
+  "permiteRecibirOfertas": true,
+  "rol":"admin"
+}
+//logins de cada uno de ellos (para demostrar que funcionan o en caso de que el token de 24h haya acabado)
+//login usuario1
+###
+POST http://localhost:3000/api/usuario/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "Usuario1@gmail.com",
+  "contrasenia": "miContrasenia"
+}
+//login usuario2
+###
+POST http://localhost:3000/api/usuario/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "Usuario2@gmail.com",
+  "contrasenia": "miContrasenia"
+}
+//login admin
+###
+POST http://localhost:3000/api/usuario/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "Admin1@gmail.com",
+  "contrasenia": "miContrasenia"
+}
+//Modificar usuario2 (solo el mismo puede modificarse, por lo que ha de ser su propio token), además como el email hace de id no se puede alterar (en una cuenta normal tampoco es posible)
+//quizas poder modificar el rol es darle mucha libertad al usuario (pero el trabajo no especifica sobre esto)
+###
+PUT http://localhost:3000/api/usuario/Usuario2@gmail.com HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjRjYTNkZTdlMGI0MjdlNDdmOTQ4NDEiLCJlbWFpbCI6IlVzdWFyaW8yQGdtYWlsLmNvbSIsImlhdCI6MTcxNjMwNTk4MywiZXhwIjoxNzE2MzEzMTgzfQ.lawhXu6OsfgCHiHUbgET54z6Qt2PtfIIKad2ryftcPI
+
+{
+  "nombreUsuario": "Usuario2Modificado",
+  "email": "Usuario2@gmail.com",
+  "contrasenia": "miContraseniaModificada",
+  "rol": "admin"
+}
+//mostrar todos los usuarios
+###
+GET http://localhost:3000/api/usuario HTTP/1.1
+//mostrar usuario por email
+###
+GET http://localhost:3000/api/usuario/Usuario2@gmail.com HTTP/1.1
+//eliminar un usuario (ha de usario su propio token, ya que solo un usuario puede eliminarse)
+###
+DELETE http://localhost:3000/api/usuario/Usuario2@gmail.com HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjRjYTI1ZTdlMGI0MjdlNDdmOTQ4MzYiLCJlbWFpbCI6IlVzdWFyaW8yQGdtYWlsLmNvbSIsImlhdCI6MTcxNjI5ODYxNSwiZXhwIjoxNzE2MzA1ODE1fQ.xmXQdQ1InvVZFZoSkP43Sqn5qhsWKvEIFZ-1U2LSEa0
+
+
+//COMERCIOS
+
+
+//crear comercio1 (solo un admin puede)
+###
+POST http://localhost:3000/api/comercio/register HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjRjZjk4YjY1MjZiZjMzNTk3YzdjY2EiLCJlbWFpbCI6IkFkbWluMUBnbWFpbC5jb20iLCJpYXQiOjE3MTYzMjczMTcsImV4cCI6MTcxNjMzNDUxN30.uYzLsB9Xq34JmlZXaUMKrLMCK8XIps0xni5wbdNSwLM
+
+{
+    "nombre": "Comercio1",
+    "cif": "A1111111A",
+    "direccion": "Alonso Cano, 94",
+    "email": "Comercio1@gmail.com",
+    "telefonoContacto": "123456789",
+    "contrasenia": "miContrasenia",
+    "ciudad": "Madrid",
+    "actividad": "Alquiler"
+}
+//crear comercio2 (solo un admin puede)
+###
+POST http://localhost:3000/api/comercio/register HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjRkMWFmMjhmYTFjNzgzYTEyMzk1YjUiLCJlbWFpbCI6IkFkbWluMUBnbWFpbC5jb20iLCJpYXQiOjE3MTYzMzA1ODgsImV4cCI6MTcxNjMzNzc4OH0.Rq3MChoi36lwe5yQXdWundFgPObMlufIGsVTOAVWHek
+
+{
+    "nombre": "Comercio2",
+    "cif": "A2222222A",
+    "direccion": "Padre Manuel Da Nobrega, 7",
+    "email": "Comercio2@gmail.com",
+    "telefonoContacto": "123456789",
+    "contrasenia": "miContrasenia",
+    "ciudad": "Barcelona",
+    "actividad": "Alquiler"
+}
+//crear comercio3 (solo un admin puede)
+###
+POST http://localhost:3000/api/comercio/register HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjRjZjk4YjY1MjZiZjMzNTk3YzdjY2EiLCJlbWFpbCI6IkFkbWluMUBnbWFpbC5jb20iLCJpYXQiOjE3MTYzMjc4ODAsImV4cCI6MTcxNjMzNTA4MH0.2CPki_YhnMKsFgw104SBB_Xrp8y6QukVlzAOyRK6vBQ
+
+{
+    "nombre": "Comercio3",
+    "cif": "A3333333A",
+    "direccion": "Americo Castro, 74",
+    "email": "Comercio3@gmail.com",
+    "telefonoContacto": "123456789",
+    "contrasenia": "miContrasenia",
+    "ciudad": "Madrid",
+    "actividad": "Comida Rapida"
+}
+//modificar comercio2 (solo un administrador puede modificar un comercio, por lo que necesito JWT)
+//el cif no puede alterarse, ha de coincidir
+###
+PUT http://localhost:3000/api/comercio/A2222222A HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjRkMWFmMjhmYTFjNzgzYTEyMzk1YjUiLCJlbWFpbCI6IkFkbWluMUBnbWFpbC5jb20iLCJpYXQiOjE3MTYzMzQ2NjUsImV4cCI6MTcxNjM0MTg2NX0.deiKS1MU23ipISPImnZiXnbcglQBqcMg_gRU1nMSLRA
+
+{
+    "nombre": "Comercio2Modificado",
+    "cif": "A2222222A",
+    "direccion": "DireccionModificada",
+    "email": "Comercio2Modificado@gmail.com",
+    "contrasenia": "miContraseniaModificada",
+    "actividad": "Restauracion"
+}
+//agregar fotos al comercio
+###
+POST http://localhost:3000/api/comercio/photo/A2222222A HTTP/1.1
+Content-Type: multipart/form-data; boundary=Boundry
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjRkMWFmMjhmYTFjNzgzYTEyMzk1YjUiLCJlbWFpbCI6IkFkbWluMUBnbWFpbC5jb20iLCJpYXQiOjE3MTYzMzQ2NjUsImV4cCI6MTcxNjM0MTg2NX0.deiKS1MU23ipISPImnZiXnbcglQBqcMg_gRU1nMSLRA
+
+--Boundry
+Content-Disposition: form-data; name="image"; filename="cards.jpg"
+Content-Type: image/png
+
+< ./clavero_alaska.png
+--Boundry--
+//obtener la foto
+###
+GET http://localhost:3000/api/comercio/photo/A2222222A HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjRkMWFmMjhmYTFjNzgzYTEyMzk1YjUiLCJlbWFpbCI6IkFkbWluMUBnbWFpbC5jb20iLCJpYXQiOjE3MTYzMzQ2NjUsImV4cCI6MTcxNjM0MTg2NX0.deiKS1MU23ipISPImnZiXnbcglQBqcMg_gRU1nMSLRA
+
+//eliminar la foto
+###
+DELETE http://localhost:3000/api/comercio/photo/A2222222A HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjRkMWFmMjhmYTFjNzgzYTEyMzk1YjUiLCJlbWFpbCI6IkFkbWluMUBnbWFpbC5jb20iLCJpYXQiOjE3MTYzMzQ2NjUsImV4cCI6MTcxNjM0MTg2NX0.deiKS1MU23ipISPImnZiXnbcglQBqcMg_gRU1nMSLRA
+
+//login del comercio1 (tambien devuelve JWT pero del comercio)
+###
+POST http://localhost:3000/api/comercio/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "cif": "A1111111A",
+  "contrasenia": "miContrasenia"
+}
+//Solo un usuario puedo modificar las reseñas o las valoraciones, un comercio no puede (el token ha de ser de usuario/admin)
+###
+PUT http://localhost:3000/api/comercio/resenias/A1111111A HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjRjYTNkZTdlMGI0MjdlNDdmOTQ4NDEiLCJlbWFpbCI6IlVzdWFyaW8yQGdtYWlsLmNvbSIsImlhdCI6MTcxNjMwNTc5OCwiZXhwIjoxNzE2MzEyOTk4fQ.Juz6Kt8i6k_mTClS6vjmxTMGKWWem10F01x2v2HIdyg
+
+{
+  "cif": "A1111111A",
+  "resenias": ["Nueva reseña 5"],
+  "scoring": 3
+}
+//Mostrar comercios
+###
+GET http://localhost:3000/api/comercio HTTP/1.1
+
+//Al tener el parametro ordenCif = true ordena por cif en vez de por defecto
+###
+GET http://localhost:3000/api/comercio?ordenadoXCif=true HTTP/1.1
+//mostrar un comercio por cif
+###
+GET http://localhost:3000/api/comercio/A3333333A HTTP/1.1
+//Consultar comercios por ciudad
+###
+GET http://localhost:3000/api/comercio/ciudad/Madrid?OrdenadoXScoring=true HTTP/1.1
+//Consultar comercios por actividad
+###
+GET http://localhost:3000/api/comercio/actividad/Alquiler HTTP/1.1
+//Consultar comercios por ciudad y actividad al mismo tiempo
+###
+GET http://localhost:3000/api/comercio/ciudad/Madrid/actividad/Alquiler HTTP/1.1
+//eliminar comercio2 y comercio3 (necesita token del admin)
+//Por defecto hace un borrado fisico
+###
+DELETE http://localhost:3000/api/comercio/A3333333A HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjRjYTI5NTdlMGI0MjdlNDdmOTQ4MzgiLCJlbWFpbCI6IkFkbWluMUBnbWFpbC5jb20iLCJpYXQiOjE3MTYyOTkxMzgsImV4cCI6MTcxNjMwNjMzOH0.JYYYydtmW3gDsxHhH38DgTPcsHh5a4WTBTbKnFRmZSE
+
+//Al tener el parametro Logico = true hace un borrado logico en vez de un borrado fisico
+###
+DELETE http://localhost:3000/api/comercio/A2222222A?Logico=True HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjRjYTI5NTdlMGI0MjdlNDdmOTQ4MzgiLCJlbWFpbCI6IkFkbWluMUBnbWFpbC5jb20iLCJpYXQiOjE3MTYyOTkxMzgsImV4cCI6MTcxNjMwNjMzOH0.JYYYydtmW3gDsxHhH38DgTPcsHh5a4WTBTbKnFRmZSE
+//Devolver emails de todos los que compartan ciudad con el comercio, que tenga el flag a true y entre sus intereses este el indicado
+###
+GET http://localhost:3000/api/usuario/cif/A1111111A/intereses/Videojuegos HTTP/1.1
